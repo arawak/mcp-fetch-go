@@ -1,0 +1,101 @@
+{
+  "effective_go": {
+    "url": "https://go.dev/doc/effective_go",
+    "fixture": "testdata/effective_go.html",
+    "captured": "2026-02-21",
+    "contentType": "text/html",
+    "tests": {
+      "contains": ["Introduction", "Formatting", "Commentary", "Names", "## "],
+      "notContains": ["<nav", "<footer", "Why Go", "Packages"],
+      "minLength": 10000
+    }
+  },
+  "reddit_opencode": {
+    "url": "https://www.reddit.com/r/opencodeCLI/comments/",
+    "fixture": "testdata/reddit_sample.html",
+    "captured": "2026-02-21",
+    "contentType": "text/html",
+    "tests": {
+      "contains": ["Sometimes opencode just stops", "first couple of rounds"],
+      "notContains": ["Go to opencodeCLI", "Read more", "Share", "<shreddit", "<faceplate"],
+      "minLength": 500
+    }
+  },
+  "github_repo": {
+    "url": "https://github.com/modelcontextprotocol/go-sdk",
+    "fixture": "testdata/github_repo.html",
+    "captured": "2026-02-21",
+    "contentType": "text/html",
+    "tests": {
+      "contains": ["go-sdk", "Model Context Protocol"],
+      "notContains": ["Star", "Notifications", "You must be signed in", "<tool-tip", "<svg"],
+      "minLength": 500
+    }
+  },
+  "python_asyncio": {
+    "url": "https://docs.python.org/3/library/asyncio.html",
+    "fixture": "fixtures/docs/python_asyncio.html",
+    "captured": "2026-02-21",
+    "contentType": "text/html",
+    "tests": {
+      "contains": ["asyncio", "coroutine", "event loop"],
+      "notContains": ["<nav", "<footer"],
+      "minLength": 2000
+    }
+  },
+  "rust_ownership": {
+    "url": "https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html",
+    "fixture": "fixtures/docs/rust_ownership.html",
+    "captured": "2026-02-21",
+    "contentType": "text/html",
+    "tests": {
+      "contains": ["ownership", "memory"],
+      "notContains": ["<nav", "<footer"],
+      "minLength": 2000
+    }
+  },
+  "golang_go_issue_44253": {
+    "url": "https://github.com/golang/go/issues/44253",
+    "fixture": "fixtures/github/golang-go-issue-44253.html",
+    "captured": "2026-02-21",
+    "contentType": "text/html",
+    "tests": {
+      "contains": ["44253"],
+      "notContains": ["<tool-tip", "<svg"],
+      "minLength": 500
+    }
+  },
+  "golang_go_pr_1": {
+    "url": "https://github.com/golang/go/pull/1",
+    "fixture": "fixtures/github/golang-go-pr-1.html",
+    "captured": "2026-02-21",
+    "contentType": "text/html",
+    "tests": {
+      "contains": ["#1"],
+      "notContains": ["<tool-tip", "<svg"],
+      "minLength": 200
+    }
+  },
+  "rfc9110": {
+    "url": "https://www.rfc-editor.org/rfc/rfc9110",
+    "fixture": "fixtures/api/rfc9110.html",
+    "captured": "2026-02-21",
+    "contentType": "text/html",
+    "tests": {
+      "contains": ["HTTP Semantics", "RFC 9110"],
+      "notContains": [],
+      "minLength": 5000
+    }
+  },
+  "pkg_go_dev_http": {
+    "url": "https://pkg.go.dev/net/http",
+    "fixture": "fixtures/api/pkg-go-dev-net-http.html",
+    "captured": "2026-02-21",
+    "contentType": "text/html",
+    "tests": {
+      "contains": ["net/http", "Client", "Handler"],
+      "notContains": ["<nav"],
+      "minLength": 3000
+    }
+  }
+}

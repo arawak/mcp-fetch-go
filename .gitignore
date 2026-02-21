@@ -37,4 +37,5 @@ Thumbs.db
 
 # Binary
 mcp-fetch-go
+bin/
 

@@ -36,5 +36,6 @@ go.work.sum
 Thumbs.db
 
 # Binary
-mcp-fetch-go
+/mcp-fetch-go
+bin/
 

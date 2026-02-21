@@ -197,34 +197,26 @@ MCP_FETCH_ALLOWED_DOMAINS=example.com,docs.example.com gofetch
 ## Building
 
 ```bash
-# Build binary
+# Using Make (recommended)
+make build    # Build binary to bin/gofetch
+make test     # Run tests with coverage
+make install  # Install to $GOPATH/bin
+
+# Or directly with Go
 go build -o gofetch ./cmd/mcp-fetch-go
 
-# Build for Docker (static binary)
+# Static binary for containers
 CGO_ENABLED=0 go build -ldflags="-s -w" -o gofetch ./cmd/mcp-fetch-go
-```
-
-### Docker
-
-```dockerfile
-FROM golang:1.25-alpine AS builder
-WORKDIR /app
-COPY . .
-RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o gofetch ./cmd/mcp-fetch-go
-
-FROM scratch
-COPY --from=builder /app/gofetch /gofetch
-ENTRYPOINT ["/gofetch"]
 ```
 
 ## Testing
 
 ```bash
-# Run all tests
-go test ./...
+# Run all tests with race detection and coverage
+make test
 
-# Run with coverage
-go test -cover ./...
+# Or directly with Go
+go test -race -cover ./...
 
 # Run integration tests only
 go test ./tests/... -v

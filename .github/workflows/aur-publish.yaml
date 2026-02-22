@@ -1,0 +1,63 @@
+# .github/workflows/aur-publish.yml
+name: Publish to AUR
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  aur-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get release version
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Download release assets and compute checksums
+        id: checksums
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          
+          curl -sLO "https://github.com/arawak/mcp-fetch-go/releases/download/v${VERSION}/mcp-fetch-go_${VERSION}_linux_amd64.tar.gz"
+          curl -sLO "https://github.com/arawak/mcp-fetch-go/releases/download/v${VERSION}/mcp-fetch-go_${VERSION}_linux_arm64.tar.gz"
+          
+          echo "sha256_x86_64=$(sha256sum mcp-fetch-go_${VERSION}_linux_amd64.tar.gz | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+          echo "sha256_aarch64=$(sha256sum mcp-fetch-go_${VERSION}_linux_arm64.tar.gz | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+
+      - name: Generate PKGBUILD
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          cat > PKGBUILD << 'EOF'
+          # Maintainer: Sean Mitchell <sean@mitchwood.com>
+          pkgname=mcp-fetch-go-bin
+          pkgver=${{ steps.version.outputs.version }}
+          pkgrel=1
+          pkgdesc="MCP server that fetches URLs and converts HTML to Markdown for LLM coding assistants"
+          arch=('x86_64' 'aarch64')
+          url="https://github.com/arawak/mcp-fetch-go"
+          license=('MIT')
+          provides=('mcp-fetch-go' 'gofetch')
+          conflicts=('mcp-fetch-go' 'mcp-fetch-go-git')
+          source_x86_64=("${pkgname}-${pkgver}.tar.gz::https://github.com/arawak/mcp-fetch-go/releases/download/v${pkgver}/mcp-fetch-go_${pkgver}_linux_amd64.tar.gz")
+          source_aarch64=("${pkgname}-${pkgver}.tar.gz::https://github.com/arawak/mcp-fetch-go/releases/download/v${pkgver}/mcp-fetch-go_${pkgver}_linux_arm64.tar.gz")
+          sha256sums_x86_64=('${{ steps.checksums.outputs.sha256_x86_64 }}')
+          sha256sums_aarch64=('${{ steps.checksums.outputs.sha256_aarch64 }}')
+
+          package() {
+            install -Dm755 gofetch "${pkgdir}/usr/bin/gofetch"
+            install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+            install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+          }
+          EOF
+
+      - name: Publish to AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v3
+        with:
+          pkgname: mcp-fetch-go-bin
+          pkgbuild: ./PKGBUILD
+          commit_username: ${{ secrets.AUR_USERNAME }}
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          commit_message: "Update to v${{ steps.version.outputs.version }}"
